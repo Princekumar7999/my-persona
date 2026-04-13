@@ -9,6 +9,7 @@ async function main() {
       prompt: 'say hi'
     });
     console.log("Keys:", Object.keys(response));
+    console.log("Has toDataStreamResponse?", !!response.toDataStreamResponse);
   } catch (e) {
     console.error("FAILED:", e);
   }

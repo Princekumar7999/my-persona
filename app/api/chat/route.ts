@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { google } from '@ai-sdk/google';
-import { streamText, tool } from 'ai';
+import { generateText, tool } from 'ai';
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -29,10 +29,11 @@ Here are your guidelines:
 `;
 
   try {
-    const result = await streamText({
+    const result = await generateText({
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages,
+      maxSteps: 3,
       tools: {
         checkAvailability: tool({
           description: 'Check the available slots for Prince Kumar on Cal.com.',
@@ -77,8 +78,10 @@ Here are your guidelines:
       }
     });
 
-    // @ts-ignore
-    return result.toDataStreamResponse();
+    return new Response(result.text, {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
   } catch (error: any) {
     console.error("VERCEL API CRASH:", error);
     return new Response(JSON.stringify({ error: error.message || error.toString(), stack: error.stack }), { status: 500, headers: { 'Content-Type': 'application/json' } });
