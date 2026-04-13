@@ -28,7 +28,7 @@ Here are your guidelines:
 `;
 
   const result = streamText({
-    model: google('models/gemini-1.5-flash-latest'),
+    model: google('gemini-2.5-flash'),
     system: systemPrompt,
     messages,
     tools: {
@@ -61,13 +61,13 @@ Here are your guidelines:
                Authorization: `Bearer ${process.env.CAL_API_KEY}`,
                'Content-Type': 'application/json'
              },
-               body: JSON.stringify({
-                 start: startTime,
-                 eventTypeId: 5339335,
-                 attendee: { name, email },
-                 timeZone: "Asia/Calcutta",
-                 language: "en"
-               })
+             body: JSON.stringify({
+               start: startTime,
+               eventTypeId: 5339335,
+               attendee: { name, email },
+               timeZone: "Asia/Calcutta",
+               language: "en"
+             })
            });
            return await res.json();
         }
@@ -75,5 +75,6 @@ Here are your guidelines:
     }
   });
 
-  return result.toTextStreamResponse();
+  // @ts-ignore
+  return result.toDataStreamResponse();
 }
