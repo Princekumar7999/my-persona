@@ -29,7 +29,7 @@ Here are your guidelines:
 `;
 
   try {
-    const result = streamText({
+    const result = await streamText({
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages,
