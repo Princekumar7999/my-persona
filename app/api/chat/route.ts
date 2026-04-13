@@ -32,7 +32,7 @@ Here are your guidelines:
 
   try {
     const result = await generateText({
-      model: google('gemini-2.0-flash-exp'),
+      model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages: messages.slice(-3), // Only send the last 2 interactions to save quota
       maxSteps: 2, // Hard limit internal tool loops 
