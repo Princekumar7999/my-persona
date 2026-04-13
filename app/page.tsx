@@ -41,12 +41,12 @@ export default function Chat() {
       <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-200 flex items-center gap-2">
         <input
           className="flex-1 border bg-slate-50 border-gray-300 rounded-full px-5 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
-          value={input}
+          value={input || ''}
           placeholder="Ask me anything..."
           onChange={handleInputChange}
           autoFocus
         />
-        <button type="submit" disabled={!input.trim()} className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white p-3 rounded-full shadow-md transition-all active:scale-95">
+        <button type="submit" disabled={!input || !input.trim()} className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white p-3 rounded-full shadow-md transition-all active:scale-95">
           <Send size={18} />
         </button>
       </form>
