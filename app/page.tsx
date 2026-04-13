@@ -6,16 +6,33 @@ import { useChat } from '@ai-sdk/react';
 import { Send, User } from 'lucide-react';
 
 export default function Chat() {
-  const { messages, append, isLoading } = useChat({
-    api: '/api/chat'
-  });
+  const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     if (!text.trim() || isLoading) return;
-    append({ role: 'user', content: text });
+    
+    const userMsg = { role: 'user', content: text, id: Date.now().toString() };
+    const currentMessages = [...messages, userMsg];
+    setMessages(currentMessages);
     setText('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: currentMessages })
+      });
+      const replyText = await res.text();
+      setMessages(prev => [...prev, { role: 'assistant', content: replyText, id: Date.now().toString() }]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
