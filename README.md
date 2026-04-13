@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prince Kumar AI Persona
 
-## Getting Started
+This repository contains the source code for an interactive AI Persona (Voice & Chat Agent) capable of speaking intelligently about Prince's resume, GitHub projects, and scheduling interviews natively to a Cal.com calendar.
 
-First, run the development server:
+## 🏗 Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```mermaid
+graph TD
+    User-->|Voice (Phone)| Vapi[Vapi.ai Switchboard]
+    Vapi-->|System Prompt Injection| LLM[Google Gemini/GPT Engine]
+    
+    UserChat[Evaluator via Chat Interface] -->|Send Message| Next[Next.js App Router]
+    Next -->|Stream Result| LLM
+    
+    LLM -->|RAG Grounding| DB[(knowledge.md:\nResume & Github READMEs)]
+    LLM -->|Serverless Function Call / webhook| Cal[Cal.com V2 Booking API]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
+1. **Live Chat Persona**: A Next.js 14 based chat UI integrated with Vercel AI SDK. Grounded strictly on real resume and GitHub data.
+2. **AI Voice Agent**: Ultra-low latency voice agent via Vapi.ai capable of natural interruptions.
+3. **Automated Scheduling**: Book an interview via Chat or Voice effortlessly without human intervention thanks to the Cal.com native tool calls.
+4. **Resilient Knowledge Base**: Uses direct in-prompt Document injection for 0% abstraction loss and maximum retrieval accuracy compared to chunking Vector DBs.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Setup Instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clone the repository to your local machine.
+2. Install the necessary packages:
+   ```bash
+   npm install
+   ```
+3. Populate an `.env.local` file at the root of the project with:
+   ```bash
+   CAL_API_KEY="your_api_key_here"
+   GOOGLE_GENERATIVE_AI_API_KEY="your_google_key_here"
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+5. Deploy to Vercel:
+   ```bash
+   npx vercel --prod
+   ```
