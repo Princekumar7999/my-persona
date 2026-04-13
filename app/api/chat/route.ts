@@ -34,6 +34,7 @@ Here are your guidelines:
       system: systemPrompt,
       messages,
       maxSteps: 3,
+      maxRetries: 0,
       tools: {
         checkAvailability: tool({
           description: 'Check the available slots for Prince Kumar on Cal.com.',
