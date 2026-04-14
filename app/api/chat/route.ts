@@ -92,12 +92,22 @@ BOOKING FLOW (STRICT):
 
   // ---------------- AI CALL ----------------
 
-  const result = await generateText({
-    model: google('gemini-3.1-flash-lite-preview'),
-    system: systemPrompt + "\nContext:\n" + resumeText,
-    messages: messages.slice(-3),
-    tools,
-  });
+  let result = null;
+  try {
+    result = await generateText({
+      model: google('gemini-3.1-flash-lite-preview'),
+      system: systemPrompt + "\nContext:\n" + resumeText,
+      messages: messages.slice(-3),
+      tools,
+    });
+  } catch (e) {
+    console.error('AI generateText error', e);
+    // Return a friendly message instead of a 500 so the UI doesn't break hard
+    return new Response('The AI service is temporarily unavailable. Please try again in a few moments.', {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
 
   // ---------------- RESPONSE ----------------
 
