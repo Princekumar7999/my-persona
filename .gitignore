@@ -1,6 +1,7 @@
-node_modules/
-.next/
-.env
+# local ignores
+.env*
 .env.local
 data/
+node_modules/
 package-lock.json
+.next/
