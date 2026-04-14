@@ -95,7 +95,7 @@ BOOKING FLOW (STRICT):
   let result = null;
   try {
     result = await generateText({
-      model: google('gemini-3.1-flash-lite-preview'),
+      model: google(process.env.MODEL_NAME),
       system: systemPrompt + "\nContext:\n" + resumeText,
       messages: messages.slice(-3),
       tools,
