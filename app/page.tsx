@@ -32,7 +32,9 @@ export default function Home() {
         body: JSON.stringify({ messages: currentMessages })
       });
       const replyText = await res.text();
-      setMessages(prev => [...prev, { role: 'assistant', content: replyText, id: Date.now().toString() }]);
+      // detect upstream Gemini/AI-side unavailability messages and tag them
+      const isGeminiError = /temporarily unavailable|high demand|model is currently experiencing|This model is currently experiencing/i.test(replyText);
+      setMessages(prev => [...prev, { role: 'assistant', content: replyText, id: Date.now().toString(), errorFrom: isGeminiError ? 'gemini' : null }]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -166,6 +168,12 @@ export default function Home() {
                     {booking.meetingUrl && (
                       <a className="inline-block mt-2 text-blue-200 underline" href={booking.meetingUrl} target="_blank" rel="noreferrer">Open meeting URL</a>
                     )}
+                  </div>
+                )}
+                {m.errorFrom === 'gemini' && (
+                  <div className="mt-2 px-4 py-3 rounded-md bg-yellow-900/80 text-yellow-100 shadow-sm max-w-[70%]">
+                    <div className="font-semibold">Note: Upstream AI service busy</div>
+                    <div className="text-sm mt-1">This response indicates the Gemini API is currently experiencing high traffic. Please try again after some time.</div>
                   </div>
                 )}
               </div>
